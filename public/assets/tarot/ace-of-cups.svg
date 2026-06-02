@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1400" viewBox="0 0 800 1400">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fdf9f1"/>
+      <stop offset="100%" stop-color="#f1e7d8"/>
+    </linearGradient>
+    <radialGradient id="water" cx="50%" cy="42%" r="40%">
+      <stop offset="0%" stop-color="#8fb5d1" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#8fb5d1" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="1400" fill="url(#bg)"/>
+  <rect x="36" y="36" width="728" height="1328" rx="28" fill="none" stroke="#1f1724" stroke-opacity="0.18" stroke-width="4"/>
+  <circle cx="400" cy="520" r="230" fill="url(#water)"/>
+  <path d="M210 930 C295 840, 505 840, 590 930" fill="none" stroke="#1f1724" stroke-width="8" stroke-linecap="round"/>
+  <path d="M260 895 C315 885, 485 885, 540 895" fill="none" stroke="#c8a97e" stroke-width="6" stroke-linecap="round" opacity="0.95"/>
+  <path d="M350 420 h100 c0 0 18 110 18 150 c0 110 -35 165 -68 165 s-68 -55 -68 -165 c0 -40 18 -150 18 -150z" fill="none" stroke="#1f1724" stroke-width="8"/>
+  <path d="M400 420 v-60" stroke="#1f1724" stroke-width="8" stroke-linecap="round"/>
+  <path d="M400 350 c26 -30 60 -30 86 0" fill="none" stroke="#c8a97e" stroke-width="6" stroke-linecap="round"/>
+  <path d="M400 350 c-26 -30 -60 -30 -86 0" fill="none" stroke="#c8a97e" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="400" cy="305" r="30" fill="#c8a97e" opacity="0.75"/>
+  <text x="400" y="110" text-anchor="middle" font-family="Georgia,serif" font-size="44" letter-spacing="5" fill="#6d6574">ACE OF CUPS</text>
+  <text x="400" y="1320" text-anchor="middle" font-family="Georgia,serif" font-size="40" letter-spacing="6" fill="#6d6574">I</text>
+</svg>

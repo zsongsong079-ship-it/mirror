@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1400" viewBox="0 0 800 1400">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fbf7ef"/>
+      <stop offset="100%" stop-color="#efe7d8"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="22%" r="45%">
+      <stop offset="0%" stop-color="#e7c98b" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#e7c98b" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="1400" fill="url(#bg)"/>
+  <rect x="36" y="36" width="728" height="1328" rx="28" fill="none" stroke="#1f1724" stroke-opacity="0.18" stroke-width="4"/>
+  <circle cx="400" cy="210" r="210" fill="url(#glow)"/>
+  <path d="M180 1000 C260 860, 340 800, 400 790 C460 800, 540 860, 620 1000" fill="none" stroke="#1f1724" stroke-width="8" stroke-linecap="round" opacity="0.9"/>
+  <path d="M240 900 C310 860, 360 845, 400 845 C440 845, 490 860, 560 900" fill="none" stroke="#c8a97e" stroke-width="6" stroke-linecap="round" opacity="0.9"/>
+  <circle cx="400" cy="620" r="110" fill="none" stroke="#1f1724" stroke-width="8" opacity="0.95"/>
+  <circle cx="400" cy="620" r="34" fill="#c8a97e" opacity="0.8"/>
+  <text x="400" y="110" text-anchor="middle" font-family="Georgia,serif" font-size="50" letter-spacing="6" fill="#6d6574">THE FOOL</text>
+  <text x="400" y="1320" text-anchor="middle" font-family="Georgia,serif" font-size="40" letter-spacing="6" fill="#6d6574">0</text>
+</svg>

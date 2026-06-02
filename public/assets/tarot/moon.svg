@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1400" viewBox="0 0 800 1400">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fbf7f2"/>
+      <stop offset="100%" stop-color="#ece1d2"/>
+    </linearGradient>
+    <radialGradient id="moonGlow" cx="50%" cy="18%" r="36%">
+      <stop offset="0%" stop-color="#7c5cfa" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#7c5cfa" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="1400" fill="url(#bg)"/>
+  <rect x="36" y="36" width="728" height="1328" rx="28" fill="none" stroke="#1f1724" stroke-opacity="0.18" stroke-width="4"/>
+  <circle cx="400" cy="190" r="180" fill="url(#moonGlow)"/>
+  <path d="M500 270c-80 0-145 62-145 140s65 140 145 140c-108 62-245-18-245-140s137-202 245-140z" fill="none" stroke="#1f1724" stroke-width="8"/>
+  <path d="M220 900 C300 835, 500 835, 580 900" fill="none" stroke="#1f1724" stroke-width="8" stroke-linecap="round"/>
+  <path d="M285 970 C345 920, 455 920, 515 970" fill="none" stroke="#c8a97e" stroke-width="6" stroke-linecap="round" opacity="0.95"/>
+  <circle cx="300" cy="640" r="32" fill="none" stroke="#1f1724" stroke-width="6"/>
+  <circle cx="500" cy="640" r="32" fill="none" stroke="#1f1724" stroke-width="6"/>
+  <text x="400" y="110" text-anchor="middle" font-family="Georgia,serif" font-size="48" letter-spacing="7" fill="#6d6574">THE MOON</text>
+  <text x="400" y="1320" text-anchor="middle" font-family="Georgia,serif" font-size="40" letter-spacing="6" fill="#6d6574">XVIII</text>
+</svg>
