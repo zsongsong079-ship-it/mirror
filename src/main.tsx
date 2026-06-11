@@ -23,6 +23,23 @@ function App() {
 }
 
 function LandingPage({ onEnter }: { onEnter: () => void }) {
+  React.useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.07, rootMargin: "0px 0px -48px 0px" },
+    );
+
+    document.querySelectorAll(".reveal").forEach((element) => observer.observe(element));
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <>
       <style>{`
