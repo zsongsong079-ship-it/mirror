@@ -20,7 +20,7 @@ export const Route = createFileRoute("/start")({
   component: Start,
 });
 
-function Start() {
+export function Start() {
   const navigate = useNavigate();
   const language = useLanguageStore((s) => s.language) || "en";
   const t = translations[language] || translations.en;

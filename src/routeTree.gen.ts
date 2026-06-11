@@ -19,6 +19,7 @@ import { Route as HistoryRouteImport } from './routes/history'
 import { Route as DrawRouteImport } from './routes/draw'
 import { Route as CommunityRouteImport } from './routes/community'
 import { Route as CardsDebugRouteImport } from './routes/cards-debug'
+import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as HistoryIndexRouteImport } from './routes/history.index'
 import { Route as HistoryReadingIdRouteImport } from './routes/history.$readingId'
@@ -73,6 +74,11 @@ const CardsDebugRoute = CardsDebugRouteImport.update({
   path: '/cards-debug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -91,6 +97,7 @@ const HistoryReadingIdRoute = HistoryReadingIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/app': typeof AppRoute
   '/cards-debug': typeof CardsDebugRoute
   '/community': typeof CommunityRoute
   '/draw': typeof DrawRoute
@@ -106,6 +113,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/app': typeof AppRoute
   '/cards-debug': typeof CardsDebugRoute
   '/community': typeof CommunityRoute
   '/draw': typeof DrawRoute
@@ -121,6 +129,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/app': typeof AppRoute
   '/cards-debug': typeof CardsDebugRoute
   '/community': typeof CommunityRoute
   '/draw': typeof DrawRoute
@@ -138,6 +147,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/app'
     | '/cards-debug'
     | '/community'
     | '/draw'
@@ -153,6 +163,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/app'
     | '/cards-debug'
     | '/community'
     | '/draw'
@@ -167,6 +178,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/app'
     | '/cards-debug'
     | '/community'
     | '/draw'
@@ -183,6 +195,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRoute
   CardsDebugRoute: typeof CardsDebugRoute
   CommunityRoute: typeof CommunityRoute
   DrawRoute: typeof DrawRoute
@@ -267,6 +280,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CardsDebugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -306,6 +326,7 @@ const HistoryRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRoute,
   CardsDebugRoute: CardsDebugRoute,
   CommunityRoute: CommunityRoute,
   DrawRoute: DrawRoute,
