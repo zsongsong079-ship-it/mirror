@@ -161,7 +161,7 @@ function LandingPage({ onEnter }: { onEnter: () => void }) {
             <button className="btn-ghost" onClick={onEnter} type="button">
               <span>Enter Mirror</span>
             </button>
-            <a href="#founding" className="btn-primary">
+            <a href="https://www.creem.io/payment/prod_6oltU4M6Pxwj6JFSQbVHZQ" className="btn-primary" target="_blank" rel="noreferrer">
               <span>Become a Founding Member</span>
               <span className="btn-sub">
                 <span>$2 Early Access · Lifetime included</span>
@@ -530,8 +530,8 @@ function LandingPage({ onEnter }: { onEnter: () => void }) {
           <p className="founding-price">$2</p>
           <p className="founding-price-note"><span>EARLY ACCESS · LIFETIME INCLUDED</span></p>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 14 }}>
-            <a href="#" className="btn-primary"><span>Become a Founding Member</span><span className="btn-sub"><span>$2 Early Access</span></span></a>
-            <p style={{ fontSize: 13, color: 'var(--ink-muted)', margin: 0 }}><span>Want to contribute more? <a href="#" style={{ color: 'var(--ink-soft)', borderBottom: '1px solid var(--line)' }}>Choose your own amount.</a></span></p>
+            <a href="https://www.creem.io/payment/prod_6oltU4M6Pxwj6JFSQbVHZQ" className="btn-primary" target="_blank" rel="noreferrer"><span>Become a Founding Member</span><span className="btn-sub"><span>$2 Early Access</span></span></a>
+            <p style={{ fontSize: 13, color: 'var(--ink-muted)', margin: 0 }}><span>Want to contribute more? <a href="https://www.creem.io/payment/prod_6oltU4M6Pxwj6JFSQbVHZQ" target="_blank" rel="noreferrer" style={{ color: 'var(--ink-soft)', borderBottom: '1px solid var(--line)' }}>Choose your own amount.</a></span></p>
           </div>
         </div>
       </section>
