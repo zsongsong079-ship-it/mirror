@@ -28,6 +28,8 @@ function App() {
   const [chosenCard, setChosenCard] = React.useState<Card | null>(null);
   const [selectedCardIndex, setSelectedCardIndex] = React.useState<number | null>(null);
   const [observations, setObservations] = React.useState<ObservationAnswers>({ first: "", attention: "", associations: "" });
+  const [isShuffling, setIsShuffling] = React.useState(false);
+  const [shufflePhase, setShufflePhase] = React.useState<"idle" | "mix" | "settle">("idle");
 
   React.useEffect(() => {
     const onPopState = () => setView(window.location.pathname === "/app" ? "flow" : "landing");
@@ -57,6 +59,10 @@ function App() {
         setSelectedCardIndex={setSelectedCardIndex}
         observations={observations}
         setObservations={setObservations}
+        isShuffling={isShuffling}
+        setIsShuffling={setIsShuffling}
+        shufflePhase={shufflePhase}
+        setShufflePhase={setShufflePhase}
         onBack={() => navigate("/")}
       />
     );
@@ -95,12 +101,23 @@ function LandingPage({ onEnter }: { onEnter: () => void }) {
   );
 }
 
-function MirrorFlow({ step, setStep, question, setQuestion, suggestion, setSuggestion, deck, setDeck, chosenCard, setChosenCard, selectedCardIndex, setSelectedCardIndex, observations, setObservations, onBack }: {
-  step: FlowStep; setStep: React.Dispatch<React.SetStateAction<FlowStep>>; question: string; setQuestion: React.Dispatch<React.SetStateAction<string>>; suggestion: string; setSuggestion: React.Dispatch<React.SetStateAction<string>>; deck: Card[]; setDeck: React.Dispatch<React.SetStateAction<Card[]>>; chosenCard: Card | null; setChosenCard: React.Dispatch<React.SetStateAction<Card | null>>; selectedCardIndex: number | null; setSelectedCardIndex: React.Dispatch<React.SetStateAction<number | null>>; observations: ObservationAnswers; setObservations: React.Dispatch<React.SetStateAction<ObservationAnswers>>; onBack: () => void;
+function MirrorFlow({ step, setStep, question, setQuestion, suggestion, setSuggestion, deck, setDeck, chosenCard, setChosenCard, selectedCardIndex, setSelectedCardIndex, observations, setObservations, isShuffling, setIsShuffling, shufflePhase, setShufflePhase, onBack }: {
+  step: FlowStep; setStep: React.Dispatch<React.SetStateAction<FlowStep>>; question: string; setQuestion: React.Dispatch<React.SetStateAction<string>>; suggestion: string; setSuggestion: React.Dispatch<React.SetStateAction<string>>; deck: Card[]; setDeck: React.Dispatch<React.SetStateAction<Card[]>>; chosenCard: Card | null; setChosenCard: React.Dispatch<React.SetStateAction<Card | null>>; selectedCardIndex: number | null; setSelectedCardIndex: React.Dispatch<React.SetStateAction<number | null>>; observations: ObservationAnswers; setObservations: React.Dispatch<React.SetStateAction<ObservationAnswers>>; isShuffling: boolean; setIsShuffling: React.Dispatch<React.SetStateAction<boolean>>; shufflePhase: "idle" | "mix" | "settle"; setShufflePhase: React.Dispatch<React.SetStateAction<"idle" | "mix" | "settle">>; onBack: () => void;
 }) {
   React.useEffect(() => { if (!deck.length) setDeck(shuffle(CARDS)); }, [deck.length, setDeck]);
-  const completeObservation = observations.first.trim() && observations.attention.trim() && observations.associations.trim();
   const reflection = chosenCard ? reflect(question, chosenCard, observations) : "";
+  const startShuffle = () => {
+    if (isShuffling) return;
+    setIsShuffling(true);
+    setShufflePhase("mix");
+    setTimeout(() => setDeck(shuffle(CARDS)), 450);
+    setTimeout(() => setShufflePhase("settle"), 1050);
+    setTimeout(() => {
+      setIsShuffling(false);
+      setShufflePhase("idle");
+      setStep("draw");
+    }, 1800);
+  };
 
   return (
     <main style={{ minHeight:'100vh', background:'var(--cream)', color:'var(--ink)', fontFamily:"Georgia, 'Times New Roman', serif", padding:24 }}>
@@ -108,7 +125,7 @@ function MirrorFlow({ step, setStep, question, setQuestion, suggestion, setSugge
       <div style={{ maxWidth: 980, margin:'0 auto', paddingTop: 40 }}>
         <button type="button" onClick={onBack} style={{ border:'none', background:'transparent', color:'var(--ink-muted)', cursor:'pointer', padding:0, marginBottom:24 }}>← Back to home</button>
         {step === 'ask' && <AskStep question={question} setQuestion={setQuestion} onBegin={() => { setSuggestion(question.trim() ? `It sounds like you're asking about ${question.trim().slice(0, 40)}...` : "It sounds like you're asking about what matters most right now."); setStep('shuffle'); }} />}
-        {step === 'shuffle' && <ShuffleStep onShuffle={() => { setDeck(shuffle(CARDS)); setChosenCard(null); setSelectedCardIndex(null); setStep('draw'); }} />}
+        {step === 'shuffle' && <ShuffleStep deck={deck} shufflePhase={shufflePhase} isShuffling={isShuffling} onShuffle={startShuffle} />}
         {step === 'draw' && <DrawStep deck={deck} selectedCardIndex={selectedCardIndex} onPick={(card, idx) => { setChosenCard(card); setSelectedCardIndex(idx); setStep('observe'); }} />}
         {step === 'observe' && chosenCard && <ObserveStep card={chosenCard} observation={observations} setObservation={setObservations} onContinue={() => setStep('reflect')} />}
         {step === 'reflect' && chosenCard && <ReflectStep question={question} suggestion={suggestion} card={chosenCard} observation={observations} reflection={reflection} onRestart={() => { setQuestion(''); setSuggestion(''); setChosenCard(null); setSelectedCardIndex(null); setObservations({ first:'', attention:'', associations:'' }); setStep('ask'); }} onShuffleAgain={() => { setStep('shuffle'); }} />}
@@ -118,12 +135,16 @@ function MirrorFlow({ step, setStep, question, setQuestion, suggestion, setSugge
 }
 
 function AskStep({ question, setQuestion, onBegin }: { question: string; setQuestion: React.Dispatch<React.SetStateAction<string>>; onBegin: () => void }) { return <div><h1 style={{ fontSize:'clamp(48px, 8vw, 72px)', fontWeight:300, margin:'0 0 18px' }}>Enter Mirror</h1><p style={{ fontFamily:'var(--serif)', fontSize:22, fontStyle:'italic', color:'var(--ink-soft)', marginBottom:24 }}>What are you experiencing lately?</p><textarea value={question} onChange={(e) => setQuestion(e.target.value)} placeholder="What are you experiencing lately?" style={{ width:'100%', minHeight:180, border:'1px solid var(--line)', borderRadius:18, padding:18, fontFamily:'system-ui, sans-serif', fontSize:16, background:'rgba(255,255,255,0.6)', color:'var(--ink)', outline:'none', resize:'vertical' }} /><div style={{ marginTop:18 }}><button type="button" onClick={onBegin} style={{ border:'none', borderRadius:999, background:'var(--ink)', color:'var(--cream)', padding:'14px 22px', cursor:'pointer', fontSize:14, letterSpacing:'0.04em' }}>Begin Reflection</button></div></div>; }
-function ShuffleStep({ onShuffle }: { onShuffle: () => void }) { return <div style={{ textAlign:'center', padding:'80px 0' }}><p className="eyebrow" style={{ justifyContent:'center' }}><span>Shuffle</span></p><h2>Quietly shuffle the deck</h2><div className="shake" style={{ display:'flex', justifyContent:'center', gap:12, margin:'32px 0 40px', flexWrap:'wrap' }}>{Array.from({ length: 5 }).map((_, i) => <div key={i} className="tarot-back" style={{ width: 92, height: 146, transform: `rotate(${(i - 2) * 4}deg) translateY(${Math.abs(i - 2) * 8}px)` }} />)}</div><button type="button" onClick={onShuffle} style={{ border:'none', borderRadius:999, background:'var(--ink)', color:'var(--cream)', padding:'14px 22px', cursor:'pointer' }}>Shuffle the deck</button></div>; }
-function DrawStep({ deck, selectedCardIndex, onPick }: { deck: Card[]; selectedCardIndex: number | null; onPick: (card: Card, idx: number) => void }) { return <div><p className="eyebrow"><span>Choose</span></p><h2>Choose one card</h2><p style={{ maxWidth:620 }}>Observe the pattern of your attention. Let the card choose you as much as you choose it.</p><div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(92px,1fr))', gap:14, alignItems:'start' }}>{deck.map((card, idx) => <button key={`${card.name}-${idx}`} type="button" aria-label={`Choose ${card.name}`} onClick={() => onPick(card, idx)} className="tarot-back" style={{ width:'100%', aspectRatio:'2 / 3', opacity: selectedCardIndex === null || selectedCardIndex === idx ? 1 : 0.7, transform: selectedCardIndex === idx ? 'translateY(-4px) scale(1.02)' : 'none' }} />)}</div></div>; }
+function ShuffleStep({ deck, shufflePhase, isShuffling, onShuffle }: { deck: Card[]; shufflePhase: "idle" | "mix" | "settle"; isShuffling: boolean; onShuffle: () => void }) {
+  const shuffledDeck = shufflePhase === "mix" ? shuffle(deck.length ? deck : CARDS) : deck;
+  return <div style={{ textAlign:'center', padding:'80px 0' }}><p className="eyebrow" style={{ justifyContent:'center' }}><span>Shuffle</span></p><h2>Shuffle the deck, then choose one card.</h2><p style={{ maxWidth:620, margin:'0 auto 30px' }}>Observe the motion. Let the deck feel alive before you choose.</p><div style={{ display:'flex', justifyContent:'center', gap:12, margin:'32px 0 40px', flexWrap:'wrap', minHeight: 170 }}>{Array.from({ length: 5 }).map((_, i) => <div key={`${shufflePhase}-${i}`} className={`tarot-back ${isShuffling ? 'shake' : ''}`} style={{ width: 92, height: 146, transform: shufflePhase === 'mix' ? `translate(${(i - 2) * 10}px, ${Math.sin(i) * 8}px) rotate(${(i - 2) * 10}deg)` : shufflePhase === 'settle' ? `translate(${(i - 2) * 4}px, ${i % 2 ? -6 : 6}px) rotate(${(i - 2) * 3}deg)` : `rotate(${(i - 2) * 4}deg) translateY(${Math.abs(i - 2) * 8}px)` , opacity: shufflePhase === 'mix' ? 0.9 : 1 }} />)}</div><button type="button" onClick={onShuffle} disabled={isShuffling} style={{ border:'none', borderRadius:999, background:'var(--ink)', color:'var(--cream)', padding:'14px 22px', cursor:isShuffling ? 'default' : 'pointer', opacity:isShuffling ? 0.6 : 1 }}>{isShuffling ? 'Shuffling…' : 'Shuffle the deck'}</button>{shufflePhase === 'idle' && <p style={{ marginTop:18, color:'var(--ink-muted)' }}>Choose the card that draws your attention.</p>}</div>; }
+function DrawStep({ deck, selectedCardIndex, onPick }: { deck: Card[]; selectedCardIndex: number | null; onPick: (card: Card, idx: number) => void }) { return <div><p className="eyebrow"><span>Choose</span></p><h2>Choose the card that draws your attention.</h2><p style={{ maxWidth:620 }}>Observe the pattern of your attention. Let the card choose you as much as you choose it.</p><div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(92px,1fr))', gap:14, alignItems:'start' }}>{deck.map((card, idx) => <button key={`${card.name}-${idx}`} type="button" aria-label={`Choose a card`} onClick={() => onPick(card, idx)} className="tarot-back" style={{ width:'100%', aspectRatio:'2 / 3', opacity: selectedCardIndex === null || selectedCardIndex === idx ? 1 : 0.7, transform: selectedCardIndex === idx ? 'translateY(-4px) scale(1.02)' : 'none' }} />)}</div></div>; }
 function ObserveStep({ card, observation, setObservation, onContinue }: { card: Card; observation: ObservationAnswers; setObservation: React.Dispatch<React.SetStateAction<ObservationAnswers>>; onContinue: () => void }) { return <div><p className="eyebrow"><span>Reveal</span></p><h2>{card.name}</h2><div style={{ display:'grid', gridTemplateColumns:'minmax(280px, 360px) 1fr', gap:24, alignItems:'start' }}><img src={card.imageUrl} alt={card.name} className="card-image" /><div><p style={{ fontFamily:'var(--serif)', fontStyle:'italic', fontSize:22, color:'var(--ink-soft)' }}>Observe before meaning.</p><label style={{ display:'block', marginBottom:14 }}>What did you notice first?<textarea value={observation.first} onChange={(e) => setObservation((v) => ({ ...v, first: e.target.value }))} style={inputStyle} /></label><label style={{ display:'block', marginBottom:14 }}>What caught your attention?<textarea value={observation.attention} onChange={(e) => setObservation((v) => ({ ...v, attention: e.target.value }))} style={inputStyle} /></label><label style={{ display:'block', marginBottom:14 }}>What associations came up?<textarea value={observation.associations} onChange={(e) => setObservation((v) => ({ ...v, associations: e.target.value }))} style={inputStyle} /></label><button type="button" onClick={onContinue} disabled={!(observation.first.trim() && observation.attention.trim() && observation.associations.trim())} style={{ border:'none', borderRadius:999, background:'var(--ink)', color:'var(--cream)', padding:'14px 22px', cursor:'pointer', opacity: observation.first.trim() && observation.attention.trim() && observation.associations.trim() ? 1 : 0.45 }}>Begin Reflection</button></div></div></div>; }
 function ReflectStep({ question, suggestion, card, observation, reflection, onRestart, onShuffleAgain }: any) { return <div><p className="eyebrow"><span>Reflection</span></p><h2>Your Mirror</h2><div style={{ border:'1px solid var(--line)', borderRadius:18, background:'rgba(255,255,255,0.5)', padding:24 }}><p style={{ fontSize:14, color:'var(--ink-muted)' }}>This is not fortune telling or prediction. It is self-observation and narrative reflection.</p><p style={{ fontFamily:'var(--serif)', fontSize:20, fontStyle:'italic' }}>Question: {question || suggestion}</p><p style={{ fontFamily:'var(--serif)', fontSize:18 }}>Card: {card.name}</p><p style={{ whiteSpace:'pre-wrap', fontSize:18, lineHeight:1.8 }}>{reflection}</p></div><div style={{ marginTop:18, display:'flex', gap:12, flexWrap:'wrap' }}><button type="button" onClick={onShuffleAgain} style={{ border:'1px solid var(--line)', borderRadius:999, background:'transparent', color:'var(--ink)', padding:'14px 22px', cursor:'pointer' }}>Draw Again</button><button type="button" onClick={onRestart} style={{ border:'none', borderRadius:999, background:'var(--ink)', color:'var(--cream)', padding:'14px 22px', cursor:'pointer' }}>Start Over</button></div></div>; }
 const inputStyle: React.CSSProperties = { width:'100%', minHeight:96, marginTop:8, border:'1px solid var(--line)', borderRadius:14, padding:14, fontFamily:'system-ui, sans-serif', fontSize:15, background:'rgba(255,255,255,0.6)', color:'var(--ink)', outline:'none', resize:'vertical' };
-function reflect(question: string, card: Card, obs: ObservationAnswers) { return `Your question points toward: ${question || 'something unsaid'}.
+function reflect(question: string, card: Card, obs: ObservationAnswers) { return `This is not fortune telling or prediction.
+
+Your question points toward: ${question || 'something unsaid'}.
 
 The card ${card.name} suggests: ${card.meaning}
 
